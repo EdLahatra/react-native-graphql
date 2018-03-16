@@ -36,7 +36,6 @@ export default `
     text: String!
     user: User!
     favoriteCount: Int!
-    isFavorited: Boolean
     createdAt: Date!
     updatedAt: Date!
   }
@@ -52,19 +51,12 @@ export default `
     createTweet(text: String!): Tweet
     updateTweet(_id: ID!, text: String): Tweet
     deleteTweet(_id: ID!): Status
-    favoriteTweet(_id: ID!): Tweet
     signup(email: String!, fullName: String!, password: String!, avatar: String, username: String): Auth
     login(email: String!, password: String!): Auth
-  }
-
-  type Subscription {
-    tweetAdded: Tweet
-    tweetFavorited: Tweet
   }
 
   schema {
     query: Query
     mutation: Mutation
-    subscription: Subscription
   }
 `;
