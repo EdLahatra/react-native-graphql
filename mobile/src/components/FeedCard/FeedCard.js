@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { gql } from 'react-apollo';
 
 import styled from '../../utils/styled';
 
@@ -42,6 +43,24 @@ function FeedCard({ text, user, createdAt, favoriteCount, onFavoritePress }) {
     </Root>
   );
 }
+
+FeedCard.fragments = {
+  tweet: gql`
+    fragment FeedCard on Tweet {
+      text
+      _id
+      createdAt
+      isFavorited
+      favoriteCount
+      user {
+        username
+        avatar
+        lastName
+        firstName
+      }
+    }
+  `,
+};
 
 FeedCard.propTypes = {
   // eslint-disable-next-line

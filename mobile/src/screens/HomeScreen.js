@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { graphql, compose, withApollo } from 'react-apollo';
 import { connect } from 'react-redux';
-import { ActivityIndicator, FlatList } from 'react-native';
+import { BackHandler, ActivityIndicator, FlatList } from 'react-native';
 
 import { getUserInfo } from '../actions/user';
 
@@ -48,6 +48,20 @@ class HomeScreen extends Component {
       }
     });
 
+    BackHandler.addEventListener('hardwareButtonPress', () => this._backButtonPress());
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareButtonPress');
+  }
+
+  _backButtonPress() {
+    const { dispatch, navigation, nav, user } = this.props;
+    if (2<1) {
+      return false;
+    }
+    this.props.navigation.goBack(null);
+    return true;
   }
 
   componentDidMount() {
@@ -91,6 +105,9 @@ class HomeScreen extends Component {
 }
 
 export default withApollo(compose(
-  connect(undefined, { getUserInfo }),
+  connect(state => ({
+    nav: state.nav,
+    user: state.user,
+  }), { getUserInfo }),
   graphql(GET_TWEETS_QUERY)
 )(HomeScreen));

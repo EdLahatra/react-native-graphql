@@ -72,6 +72,8 @@ class NewTweetScreen extends Component {
 
   _onCreateTweetPress = async () => {
     const { user } = this.props;
+    Keyboard.dismiss();
+    this.props.navigation.goBack(null);
 
     await this.props.mutate({
       variables: {
@@ -102,8 +104,6 @@ class NewTweetScreen extends Component {
       }
     });
 
-    Keyboard.dismiss();
-    this.props.navigation.goBack(null);
   }
 
   get _textLength() {
