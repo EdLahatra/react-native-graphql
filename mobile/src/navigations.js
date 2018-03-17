@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { StackNavigator, TabNavigator, addNavigationHelpers } from 'react-navigation';
-import { BackHandler } from 'react-native';
+import { BackHandler, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
+
 import styled from './utils/styled';
 
 import HomeScreen from './screens/HomeScreen';
@@ -10,8 +11,10 @@ import ExploreScreen from './screens/ExploreScreen';
 import NotificationsScreen from './screens/NotificationsScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import AuthenticationScreen from './screens/AuthenticationScreen';
+import NewTweetScreen from './screens/NewTweetScreen';
 
 import HeaderAvatar from './components/HeaderAvatar';
+import ButtonHeader from './components/ButtonHeader';
 
 import { colors } from './utils/constants';
 
@@ -66,14 +69,49 @@ const Tabs = TabNavigator(
   },
 );
 
+const NewTweetModal = StackNavigator(
+  {
+    NewTweet: {
+      screen: NewTweetScreen,
+      navigationOptions: ({ navigation }) => ({
+        headerLeft: <HeaderAvatar />,
+        headerRight: (
+          <ButtonHeader
+            side="right"
+            onPress={() => {
+              Keyboard.dismiss();
+              navigation.goBack(null);
+            }}
+          >
+            <T>Close</T>
+          </ButtonHeader>
+        ),
+      }),
+    },
+  },
+  {
+    headerMode: 'none',
+  },
+);
 
 const AppMainNav = StackNavigator(
   {
     Home: {
       screen: Tabs,
-      navigationOptions: () => ({
+      navigationOptions: ({ navigation }) => ({
         headerLeft: <HeaderAvatar />,
+        headerRight: (
+          <ButtonHeader
+            side="right"
+            onPress={() => navigation.navigate('NewTweet')}
+          >
+            <T>Toogle Add</T>
+          </ButtonHeader>
+        ),
       }),
+    },
+    NewTweet: {
+      screen: NewTweetModal,
     },
   },
   {
