@@ -9,6 +9,7 @@ import HomeScreen from './screens/HomeScreen';
 import ExploreScreen from './screens/ExploreScreen';
 import NotificationsScreen from './screens/NotificationsScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import AuthenticationScreen from './screens/AuthenticationScreen';
 
 import { colors } from './utils/constants';
 
@@ -114,20 +115,22 @@ class AppNavigator extends Component {
 
   render() {
     // eslint-disable-next-line
-    const { dispatch, nav, isAuthenticated } = this.props;
-    console.log('dispatch', nav, isAuthenticated);
+    const { dispatch, nav, user } = this.props;
+    console.log('dispatch', nav, user);
     const navig = addNavigationHelpers({
       dispatch,
       state: nav,
     });
-
+    if (!user.isAuthenticated) {
+      return <AuthenticationScreen />;
+    }
     return <AppMainNav navigation={navig} />;
   }
 }
 
 export default connect(state => ({
   nav: state.nav,
-  isAuthenticated: state.user.isAuthenticated,
+  user: state.user,
 }))(AppNavigator);
 
 export const router = AppMainNav.router;
