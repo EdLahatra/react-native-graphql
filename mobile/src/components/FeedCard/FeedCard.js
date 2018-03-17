@@ -26,19 +26,10 @@ const MetaText = styled.Text`
   color: ${props => props.theme.SECONDARY};
 `;
 
-const text = 'lorem ipsumss';
-
-function FeedCard({ onFavoritePress }) {
-  const user = {
-    username: 'Pascal',
-    firstName: 'Lahatra',
-    lastName: 'Anjara',
-    avatar: null,
-  };
-  const favoriteCount = 1;
+function FeedCard({ text, user, createdAt, favoriteCount, onFavoritePress }) {
   return (
     <Root>
-      <FeedCardHeader {...user} />
+      <FeedCardHeader {...user} createdAt={createdAt} />
       <MetaContainer>
         <MetaText>
           {text}
@@ -54,7 +45,14 @@ function FeedCard({ onFavoritePress }) {
 
 FeedCard.propTypes = {
   // eslint-disable-next-line
+  favoriteCount: PropTypes.any,
+  // eslint-disable-next-line
   onFavoritePress: PropTypes.func,
+  text: PropTypes.string.isRequired,
+  // eslint-disable-next-line
+  user: PropTypes.object,
+  // eslint-disable-next-line
+  createdAt: PropTypes.any,
 };
 
 export default FeedCard;
