@@ -4,8 +4,7 @@ import { requireAuth } from '../../services/auth';
 export default {
   getTweet: async (_, { _id }, { user }) => {
     try {
-      // await requireAuth(user);
-      console.log(user)
+      await requireAuth(user);
       return Tweet.findById(_id);
     } catch (error) {
       throw error;
@@ -13,8 +12,7 @@ export default {
   },
   getTweets: async (_, args, { user }) => {
     try {
-      // await requireAuth(user);
-      console.log(user)
+      await requireAuth(user);
       return Tweet.find({}).sort({ createdAt: -1 })
     } catch (error) {
       throw error;
@@ -22,7 +20,7 @@ export default {
   },
   getUserTweets: async (_, args, { user }) => {
     try {
-      // await requireAuth(user);
+      await requireAuth(user);
       return Tweet.find({ user: user._id }).sort({ createdAt: -1 })
     } catch (error) {
       throw error;
@@ -30,10 +28,8 @@ export default {
   },
   createTweet: async (_, args, { user }) => {
     try {
-      // await requireAuth(user);
-      console.log(user)
-      return Tweet.create({ ...args, user: "5a7def95ee22c1254d4401bd" });
-      // return Tweet.create({ ...args, user: user._id });
+      await requireAuth(user);
+      return Tweet.create({ ...args, user: user._id });
     } catch (error) {
       throw error;
     }

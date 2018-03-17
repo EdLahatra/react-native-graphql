@@ -105,7 +105,6 @@ class AppNavigator extends Component {
   onBackPress() {
     // eslint-disable-next-line
     const { dispatch, nav } = this.props;
-    console.log('testts');
     if (nav.index === 0) {
       return false;
     }
@@ -116,7 +115,6 @@ class AppNavigator extends Component {
   render() {
     // eslint-disable-next-line
     const { dispatch, nav, user } = this.props;
-    console.log('dispatch', nav, user);
     const navig = addNavigationHelpers({
       dispatch,
       state: nav,
