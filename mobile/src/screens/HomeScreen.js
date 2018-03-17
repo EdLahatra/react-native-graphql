@@ -25,13 +25,13 @@ const ScrollView = styled.ScrollView`
 // const T = styled.Text``;
 
 class HomeScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      filterSearch: 'notApproved',
-    };
+  componentDidMount() {
+    this._getUserInfo();
+  }
 
-    // this.onFavoritePress = this.favorite.bind(this);
+  _getUserInfo = async () => {
+    const { data: { me } } = await this.props.client.query({ query: ME_QUERY });
+    this.props.getUserInfo(me);
   }
 
   _renderItem = ({ item }) => <FeedCard {...item} />
@@ -42,7 +42,6 @@ class HomeScreen extends Component {
 
   render() {
     const { data } = this.props;
-    console.log('data', data);
     if (data.loading) {
       return (
         <Root>
