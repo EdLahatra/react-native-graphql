@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
-import { graphql } from 'react-apollo';
+import { graphql, compose, withApollo } from 'react-apollo';
+import { connect } from 'react-redux';
 import { ActivityIndicator, FlatList } from 'react-native';
+
+import { getUserInfo } from '../actions/user';
 
 import styled from '../utils/styled';
 
 import FeedCard from '../components/FeedCard/FeedCard';
 import GET_TWEETS_QUERY from '../graphql/queries/getTweets';
+import ME_QUERY from '../graphql/queries/me';
 
 const Root = styled.View`
   background-color: #f2f2f2;
@@ -62,4 +66,7 @@ class HomeScreen extends Component {
   }
 }
 
-export default graphql(GET_TWEETS_QUERY)(HomeScreen);
+export default withApollo(compose(
+  connect(undefined, { getUserInfo }),
+  graphql(GET_TWEETS_QUERY)
+)(HomeScreen));
