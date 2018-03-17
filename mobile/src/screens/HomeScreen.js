@@ -5,6 +5,8 @@ import { ActivityIndicator, FlatList } from 'react-native';
 
 import { getUserInfo } from '../actions/user';
 
+import TWEET_ADDED_SUBSCRIPTION from '../graphql/subscriptions/tweetAdded';
+
 import styled from '../utils/styled';
 
 import FeedCard from '../components/FeedCard/FeedCard';
@@ -25,6 +27,29 @@ const ScrollView = styled.ScrollView`
 // const T = styled.Text``;
 
 class HomeScreen extends Component {
+  componentWillMount() {
+    this.props.data.subscribeToMore({
+      document: TWEET_ADDED_SUBSCRIPTION,
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) {
+          return prev;
+        }
+
+        const newTweet = subscriptionData.data.tweetAdded;
+
+        if (!prev.getTweets.find(t => t._id === newTweet._id)) {
+          return {
+            ...prev,
+            getTweets: [{ ...newTweet }, ...prev.getTweets]
+          }
+        }
+
+        return prev;
+      }
+    });
+
+  }
+
   componentDidMount() {
     this._getUserInfo();
   }
