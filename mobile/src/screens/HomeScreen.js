@@ -24,7 +24,7 @@ class HomeScreen extends Component {
       filterSearch: 'notApproved',
     };
 
-    this.onFavoritePress = this.favorite.bind(this);
+    // this.onFavoritePress = this.favorite.bind(this);
   }
 
   onFavoritePress() {
