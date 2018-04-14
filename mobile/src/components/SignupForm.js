@@ -15,14 +15,14 @@ const Root = styled(Touchable).attrs({
 })`
   flex: 1;
   position: relative;
-  justifyContent: center;
-  alignItems: center;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Wrapper = styled.View`
-  alignSelf: stretch;
-  alignItems: center;
-  justifyContent: center;
+  align-self: stretch;
+  align-items: center;
+  justify-content: center;
   flex: 1;
 `;
 
@@ -30,11 +30,11 @@ const BackButton = styled(Touchable).attrs({
   feedback: 'opacity',
   hitSlop: { top: 20, bottom: 20, right: 20, left: 20 },
 })`
-  justifyContent: center;
-  alignItems: center;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   top: 5%;
-  zIndex: 1;
+  z-index: 1;
   left: 5%;
 `;
 
@@ -80,25 +80,31 @@ const Input = styled.TextInput.attrs({
 `;
 
 class SignupForm extends Component {
-  state = {
-    fullName: '',
-    email: '',
-    password: '',
-    username: '',
-    loading: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      fullName: '',
+      email: '',
+      password: '',
+      username: '',
+      loading: false,
+    };
+  }
 
-  _onOutsidePress = () => Keyboard.dismiss();
+  static onOutsidePress() {
+    Keyboard.dismiss();
+  }
 
-  _onChangeText = (text, type) => this.setState({ [type]: text });
+  onChangeText(text, type) {
+    this.setState({ [type]: text });
+  }
 
-  _checkIfDisabled() {
+  checkIfDisabled() {
     const { fullName, email, password, username } = this.state;
-
     return (!fullName || !email || !password || !username);
   }
 
-  _onSignupPress = async () => {
+  async onSignupPress() {
     this.setState({ loading: true });
 
     const { fullName, email, password, username } = this.state;
@@ -118,17 +124,18 @@ class SignupForm extends Component {
       this.setState({ loading: false });
       return this.props.login();
     } catch (error) {
+      this.setState({ loading: false });
       throw error;
     }
-  };
+  }
 
   render() {
     if (this.state.loading) {
       return <Loading />;
     }
     return (
-      <Root onPress={this._onOutsidePress}>
-        <BackButton onPress={this.props.onBackPress}>
+      <Root onPress={() => SignupForm.onOutsidePress()}>
+        <BackButton onPress={() => this.props.onBackPress()}>
           <T>onBackPress</T>
         </BackButton>
         <Wrapper>
@@ -136,7 +143,7 @@ class SignupForm extends Component {
             <Input
               placeholder="Full Name"
               autoCapitalize="words"
-              onChangeText={text => this._onChangeText(text, 'fullName')}
+              onChangeText={text => this.onChangeText(text, 'fullName')}
             />
           </InputWrapper>
           <InputWrapper>
@@ -144,27 +151,27 @@ class SignupForm extends Component {
               placeholder="Email"
               autoCapitalize="none"
               keyboardType="email-address"
-              onChangeText={text => this._onChangeText(text, 'email')}
+              onChangeText={text => this.onChangeText(text, 'email')}
             />
           </InputWrapper>
           <InputWrapper>
             <Input
               placeholder="Password"
               secureTextEntry
-              onChangeText={text => this._onChangeText(text, 'password')}
+              onChangeText={text => this.onChangeText(text, 'password')}
             />
           </InputWrapper>
           <InputWrapper>
             <Input
               placeholder="Username"
               autoCapitalize="none"
-              onChangeText={text => this._onChangeText(text, 'username')}
+              onChangeText={text => this.onChangeText(text, 'username')}
             />
           </InputWrapper>
         </Wrapper>
         <ButtonConfirm
-          onPress={this._onSignupPress}
-          disabled={this._checkIfDisabled()}
+          onPress={() => this.onSignupPress()}
+          disabled={this.checkIfDisabled()}
         >
           <ButtonConfirmText>Sign Up</ButtonConfirmText>
         </ButtonConfirm>

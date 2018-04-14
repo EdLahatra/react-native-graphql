@@ -3,9 +3,9 @@ import { AsyncStorage } from 'react-native';
 export const LOGIN = 'LOGIN';
 
 export function login(value) {
-  console.log('login', value);
   return {
     type: LOGIN,
+    value,
   };
 }
 

@@ -16,15 +16,18 @@ if (UIManager.setLayoutAnimationEnabledExperimental) {
 }
 
 export default class App extends React.Component {
-  state = {
-    appIsReady: false,
+  constructor(props) {
+    super(props);
+    this.state = {
+      appIsReady: false,
+    };
   }
 
   componentWillMount() {
-    this._checkIfToken();
+    this.checkIfToken();
   }
 
-  _checkIfToken = async () => {
+  async checkIfToken() {
     try {
       const token = await AsyncStorage.getItem('@twitteryoutubeclone');
       if (token != null) {
@@ -39,7 +42,7 @@ export default class App extends React.Component {
 
   render() {
     if (!this.state.appIsReady) {
-      return <Loading />
+      return <Loading />;
     }
     return (
       <ApolloProvider store={store} client={client}>

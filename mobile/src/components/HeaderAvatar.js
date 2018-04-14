@@ -19,7 +19,7 @@ const Avatar = styled.Image`
 `;
 
 class HeaderAvatar extends Component {
-  _onOpenActionSheet = () => {
+  onOpenActionSheet() {
     const options = ['Logout', 'Cancel'];
     const destructiveButtonIndex = 0;
     this.props.showActionSheetWithOptions(
@@ -27,25 +27,25 @@ class HeaderAvatar extends Component {
         options,
         destructiveButtonIndex,
       },
-      buttonIndex => {
+      (buttonIndex) => {
         if (buttonIndex === 0) {
-          this.props.client.resetStore()
-          return this.props.logout();
+          this.props.client.resetStore();
+          this.props.logout();
         }
       },
     );
-  };
+  }
 
   render() {
     if (!this.props.info) {
       return (
-        <ButtonHeader side="left" onPress={() => { this.props.client.resetStore(); this.props.logout() }}>
+        <ButtonHeader side="left" onPress={() => { this.props.client.resetStore(); this.props.logout(); }}>
           <Loading size="small" />
         </ButtonHeader>
       );
     }
     return (
-      <ButtonHeader side="left" onPress={this._onOpenActionSheet}>
+      <ButtonHeader side="left" onPress={() => this.onOpenActionSheet()}>
         <Avatar source={{ uri: this.props.info.avatar }} />
       </ButtonHeader>
     );

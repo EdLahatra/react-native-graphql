@@ -26,28 +26,28 @@ const Tabs = TabNavigator(
       screen: HomeScreen,
       navigationOptions: () => ({
         headerTitle: 'Home',
-        tabBarIcon: ({ tintColor }) => <T>Home</T>,
+        tabBarIcon: () => <T>Home</T>,
       }),
     },
     Explore: {
       screen: ExploreScreen,
       navigationOptions: () => ({
         headerTitle: 'Explore',
-        tabBarIcon: ({ tintColor }) => <T>Explore</T>,
+        tabBarIcon: () => <T>Explore</T>,
       }),
     },
     Notifications: {
       screen: NotificationsScreen,
       navigationOptions: () => ({
         headerTitle: 'Notifications',
-        tabBarIcon: ({ tintColor }) => <T>Notifications</T>,
+        tabBarIcon: () => <T>Notifications</T>,
       }),
     },
     Profile: {
       screen: ProfileScreen,
       navigationOptions: () => ({
         headerTitle: 'Profile',
-        tabBarIcon: ({ tintColor }) => <T>Profile</T>,
+        tabBarIcon: () => <T>Profile</T>,
       }),
     },
   },

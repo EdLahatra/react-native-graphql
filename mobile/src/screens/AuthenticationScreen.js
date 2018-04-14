@@ -17,7 +17,7 @@ const ButtonSignupText = styled.Text`
 `;
 
 const ButtonSignup = styled(Touchable).attrs({
-  feedback: 'opacity'
+  feedback: 'opacity',
 })`
   height: 75;
   width: 150;
@@ -48,7 +48,7 @@ const BottomTextContainer = styled.View`
 
 const ButtonLogin = styled(Touchable).attrs({
   feedback: 'opacity',
-  hitSlop: { top: 20, bottom: 20, right: 20, left: 20 }
+  hitSlop: { top: 20, bottom: 20, right: 20, left: 20 },
 })`
   justify-content: center;
   align-items: center;
@@ -63,33 +63,36 @@ const ButtonLoginText = styled.Text`
 const initialState = {
   showSignup: false,
   showLogin: false,
-}
+};
 
 class AuthenticationScreen extends Component {
-  state = initialState;
+  constructor(props) {
+    super(props);
+    this.state = initialState;
+  }
 
-  _onShowSignupPress = () => this.setState({ showSignup: true });
+  onShowSignupPress = () => this.setState({ showSignup: true });
 
-  _onBackPress = () => this.setState({ ...initialState });
+  onBackPress = () => this.setState({ ...initialState });
 
   render() {
     if (this.state.showSignup) {
       return (
         <Root>
-          <SignupForm onBackPress={this._onBackPress} />
+          <SignupForm onBackPress={this.onBackPress} />
         </Root>
-      )
+      );
     }
     return (
       <Root>
-        <ButtonSignup onPress={this._onShowSignupPress}>
+        <ButtonSignup onPress={this.onShowSignupPress}>
           <ButtonSignupText>Get Started</ButtonSignupText>
         </ButtonSignup>
         <BottomTextContainer>
           <ButtonLogin>
-             <ButtonLoginText>
+            <ButtonLoginText>
                Already have an account?
-             </ButtonLoginText>
+            </ButtonLoginText>
           </ButtonLogin>
         </BottomTextContainer>
       </Root>

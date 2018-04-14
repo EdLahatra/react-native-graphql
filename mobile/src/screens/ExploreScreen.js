@@ -19,15 +19,12 @@ class ExploreScreen extends Component {
     };
   }
 
-  login() {
-    // eslint-disable-next-line
-    this.props.login(this.props.isAuthenticated);
-  }
+  login = () => this.props.login(this.props.isAuthenticated);
 
   render() {
     return (
       <Root>
-        <T onPress={() => login()}>Exploreddd</T>
+        <T onPress={this.login}>Exploreddd</T>
       </Root>
     );
   }

@@ -27,6 +27,11 @@ const ScrollView = styled.ScrollView`
 // const T = styled.Text``;
 
 class HomeScreen extends Component {
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareButtonPress');
+  }
+
   componentWillMount() {
     this.props.data.subscribeToMore({
       document: TWEET_ADDED_SUBSCRIPTION,
@@ -36,48 +41,43 @@ class HomeScreen extends Component {
         }
 
         const newTweet = subscriptionData.data.tweetAdded;
-
+        // eslint-disable-next-line
         if (!prev.getTweets.find(t => t._id === newTweet._id)) {
           return {
             ...prev,
-            getTweets: [{ ...newTweet }, ...prev.getTweets]
-          }
+            getTweets: [{ ...newTweet }, ...prev.getTweets],
+          };
         }
 
         return prev;
-      }
+      },
     });
 
-    BackHandler.addEventListener('hardwareButtonPress', () => this._backButtonPress());
+    BackHandler.addEventListener('hardwareButtonPress', () => this.backButtonPress());
   }
 
-  componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareButtonPress');
+  componentDidMount() {
+    this.getUserInfo();
   }
 
-  _backButtonPress() {
-    const { dispatch, navigation, nav, user } = this.props;
-    if (2<1) {
+  backButtonPress() {
+    // const { dispatch, navigation, nav, user } = this.props;
+    if (2 < 1) {
       return false;
     }
     this.props.navigation.goBack(null);
     return true;
   }
 
-  componentDidMount() {
-    this._getUserInfo();
-  }
-
-  _getUserInfo = async () => {
+  async getUserInfo() {
     const { data: { me } } = await this.props.client.query({ query: ME_QUERY });
     this.props.getUserInfo(me);
   }
 
-  _renderItem = ({ item }) => <FeedCard {...item} />
+  renderItem = ({ item }) => <FeedCard {...item} />;
 
-  onFavoritePress() {
-    console.log(this.state);
-  }
+  // eslint-disable-next-line
+  onFavoritePress = () => console.log(this.state);
 
   render() {
     const { data } = this.props;
@@ -86,7 +86,7 @@ class HomeScreen extends Component {
         <Root>
           <ActivityIndicator size="large" />
         </Root>
-      )
+      );
     }
 
     return (
@@ -95,8 +95,9 @@ class HomeScreen extends Component {
           <FlatList
             contentContainerStyle={{ alignSelf: 'stretch' }}
             data={data.getTweets}
+            // eslint-disable-next-line
             keyExtractor={item => item._id}
-            renderItem={this._renderItem}
+            renderItem={this.renderItem}
           />
         </ScrollView>
       </Root>
@@ -109,5 +110,5 @@ export default withApollo(compose(
     nav: state.nav,
     user: state.user,
   }), { getUserInfo }),
-  graphql(GET_TWEETS_QUERY)
+  graphql(GET_TWEETS_QUERY),
 )(HomeScreen));
