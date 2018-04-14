@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
-import {
-  addNavigationHelpers,
-  StackNavigator,
-  TabNavigator,
-} from 'react-navigation';
-import { Keyboard } from 'react-native';
+import { StackNavigator, TabNavigator, addNavigationHelpers } from 'react-navigation';
+import { BackHandler, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
-import { FontAwesome, SimpleLineIcons, EvilIcons } from '@expo/vector-icons';
+
+import styled from './utils/styled';
 
 import HomeScreen from './screens/HomeScreen';
+
 import ExploreScreen from './screens/ExploreScreen';
 import NotificationsScreen from './screens/NotificationsScreen';
 import ProfileScreen from './screens/ProfileScreen';
@@ -20,7 +18,7 @@ import ButtonHeader from './components/ButtonHeader';
 
 import { colors } from './utils/constants';
 
-const TAB_ICON_SIZE = 20;
+const T = styled.Text``;
 
 const Tabs = TabNavigator(
   {
@@ -28,32 +26,28 @@ const Tabs = TabNavigator(
       screen: HomeScreen,
       navigationOptions: () => ({
         headerTitle: 'Home',
-        tabBarIcon: ({ tintColor }) =>
-          <FontAwesome size={TAB_ICON_SIZE} color={tintColor} name="home" />,
+        tabBarIcon: () => <T>Home</T>,
       }),
     },
     Explore: {
       screen: ExploreScreen,
       navigationOptions: () => ({
         headerTitle: 'Explore',
-        tabBarIcon: ({ tintColor }) =>
-          <FontAwesome size={TAB_ICON_SIZE} color={tintColor} name="search" />,
+        tabBarIcon: () => <T>Explore</T>,
       }),
     },
     Notifications: {
       screen: NotificationsScreen,
       navigationOptions: () => ({
         headerTitle: 'Notifications',
-        tabBarIcon: ({ tintColor }) =>
-          <FontAwesome size={TAB_ICON_SIZE} color={tintColor} name="bell" />,
+        tabBarIcon: () => <T>Notifications</T>,
       }),
     },
     Profile: {
       screen: ProfileScreen,
       navigationOptions: () => ({
         headerTitle: 'Profile',
-        tabBarIcon: ({ tintColor }) =>
-          <FontAwesome size={TAB_ICON_SIZE} color={tintColor} name="user" />,
+        tabBarIcon: () => <T>Profile</T>,
       }),
     },
   },
@@ -89,7 +83,7 @@ const NewTweetModal = StackNavigator(
               navigation.goBack(null);
             }}
           >
-            <EvilIcons color={colors.PRIMARY} size={25} name="close" />
+            <T>Close</T>
           </ButtonHeader>
         ),
       }),
@@ -111,7 +105,7 @@ const AppMainNav = StackNavigator(
             side="right"
             onPress={() => navigation.navigate('NewTweet')}
           >
-            <SimpleLineIcons color={colors.PRIMARY} size={20} name="pencil" />
+            <T>Toogle Add</T>
           </ButtonHeader>
         ),
       }),
@@ -137,15 +131,41 @@ const AppMainNav = StackNavigator(
 );
 
 class AppNavigator extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      filterSearch: 'notApproved',
+    };
+
+    this.onBackPress = this.onBackPress.bind(this);
+  }
+  componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', () => this.onBackPress());
+  }
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', () => this.onBackPress());
+  }
+  onBackPress() {
+    // eslint-disable-next-line
+    const { dispatch, nav } = this.props;
+    if (nav.index === 0) {
+      return false;
+    }
+    // dispatch(NavigationActions.back());
+    return true;
+  }
+
   render() {
-    const nav = addNavigationHelpers({
-      dispatch: this.props.dispatch,
-      state: this.props.nav,
+    // eslint-disable-next-line
+    const { dispatch, nav, user } = this.props;
+    const navig = addNavigationHelpers({
+      dispatch,
+      state: nav,
     });
-    if (!this.props.user.isAuthenticated) {
+    if (!user.isAuthenticated) {
       return <AuthenticationScreen />;
     }
-    return <AppMainNav navigation={nav} />;
+    return <AppMainNav navigation={navig} />;
   }
 }
 

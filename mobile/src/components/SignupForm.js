@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styled from 'styled-components/native';
-import { MaterialIcons } from '@expo/vector-icons';
 import Touchable from '@appandflow/touchable';
 import { Platform, Keyboard, AsyncStorage } from 'react-native';
 import { graphql, compose } from 'react-apollo';
@@ -16,14 +15,14 @@ const Root = styled(Touchable).attrs({
 })`
   flex: 1;
   position: relative;
-  justifyContent: center;
-  alignItems: center;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Wrapper = styled.View`
-  alignSelf: stretch;
-  alignItems: center;
-  justifyContent: center;
+  align-self: stretch;
+  align-items: center;
+  justify-content: center;
   flex: 1;
 `;
 
@@ -31,11 +30,11 @@ const BackButton = styled(Touchable).attrs({
   feedback: 'opacity',
   hitSlop: { top: 20, bottom: 20, right: 20, left: 20 },
 })`
-  justifyContent: center;
-  alignItems: center;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   top: 5%;
-  zIndex: 1;
+  z-index: 1;
   left: 5%;
 `;
 
@@ -46,11 +45,10 @@ const ButtonConfirm = styled(Touchable).attrs({
   bottom: 15%;
   width: 70%;
   height: 50;
-  backgroundColor: ${props => props.theme.PRIMARY};
-  borderRadius: 10;
-  justifyContent: center;
-  alignItems: center;
-  shadowColor: #000;
+  background-color: ${props => props.theme.PRIMARY};
+  border-radius: 10;
+  justify-content: center;
+  align-items: center;
   shadowOpacity: 0.2;
   shadowRadius: 5;
   shadowOffset: 0px 2px;
@@ -59,17 +57,18 @@ const ButtonConfirm = styled(Touchable).attrs({
 
 const ButtonConfirmText = styled.Text`
   color: ${props => props.theme.WHITE};
-  fontWeight: 600;
+  font-weight: 600;
 `;
 
 const InputWrapper = styled.View`
   height: 50;
   width: 70%;
-  borderBottomWidth: 2;
-  borderBottomColor: ${props => props.theme.LIGHT_GRAY};
-  marginVertical: 5;
+  border-bottom-width: 2;
+  border-bottom-color: ${props => props.theme.LIGHT_GRAY};
   justifyContent: flex-end;
 `;
+
+const T = styled.Text``;
 
 const Input = styled.TextInput.attrs({
   placeholderTextColor: colors.LIGHT_GRAY,
@@ -81,29 +80,31 @@ const Input = styled.TextInput.attrs({
 `;
 
 class SignupForm extends Component {
-  state = {
-    fullName: '',
-    email: '',
-    password: '',
-    username: '',
-    loading: false,
-  };
-
-  _onOutsidePress = () => Keyboard.dismiss();
-
-  _onChangeText = (text, type) => this.setState({ [type]: text });
-
-  _checkIfDisabled() {
-    const { fullName, email, password, username } = this.state;
-
-    if (!fullName || !email || !password || !username) {
-      return true;
-    }
-
-    return false;
+  constructor(props) {
+    super(props);
+    this.state = {
+      fullName: '',
+      email: '',
+      password: '',
+      username: '',
+      loading: false,
+    };
   }
 
-  _onSignupPress = async () => {
+  static onOutsidePress() {
+    Keyboard.dismiss();
+  }
+
+  onChangeText(text, type) {
+    this.setState({ [type]: text });
+  }
+
+  checkIfDisabled() {
+    const { fullName, email, password, username } = this.state;
+    return (!fullName || !email || !password || !username);
+  }
+
+  async onSignupPress() {
     this.setState({ loading: true });
 
     const { fullName, email, password, username } = this.state;
@@ -123,25 +124,26 @@ class SignupForm extends Component {
       this.setState({ loading: false });
       return this.props.login();
     } catch (error) {
+      this.setState({ loading: false });
       throw error;
     }
-  };
+  }
 
   render() {
     if (this.state.loading) {
       return <Loading />;
     }
     return (
-      <Root onPress={this._onOutsidePress}>
-        <BackButton onPress={this.props.onBackPress}>
-          <MaterialIcons color={colors.WHITE} size={30} name="arrow-back" />
+      <Root onPress={() => SignupForm.onOutsidePress()}>
+        <BackButton onPress={() => this.props.onBackPress()}>
+          <T>onBackPress</T>
         </BackButton>
         <Wrapper>
           <InputWrapper>
             <Input
               placeholder="Full Name"
               autoCapitalize="words"
-              onChangeText={text => this._onChangeText(text, 'fullName')}
+              onChangeText={text => this.onChangeText(text, 'fullName')}
             />
           </InputWrapper>
           <InputWrapper>
@@ -149,27 +151,27 @@ class SignupForm extends Component {
               placeholder="Email"
               autoCapitalize="none"
               keyboardType="email-address"
-              onChangeText={text => this._onChangeText(text, 'email')}
+              onChangeText={text => this.onChangeText(text, 'email')}
             />
           </InputWrapper>
           <InputWrapper>
             <Input
               placeholder="Password"
               secureTextEntry
-              onChangeText={text => this._onChangeText(text, 'password')}
+              onChangeText={text => this.onChangeText(text, 'password')}
             />
           </InputWrapper>
           <InputWrapper>
             <Input
               placeholder="Username"
               autoCapitalize="none"
-              onChangeText={text => this._onChangeText(text, 'username')}
+              onChangeText={text => this.onChangeText(text, 'username')}
             />
           </InputWrapper>
         </Wrapper>
         <ButtonConfirm
-          onPress={this._onSignupPress}
-          disabled={this._checkIfDisabled()}
+          onPress={() => this.onSignupPress()}
+          disabled={this.checkIfDisabled()}
         >
           <ButtonConfirmText>Sign Up</ButtonConfirmText>
         </ButtonConfirm>

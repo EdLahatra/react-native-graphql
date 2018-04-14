@@ -3,10 +3,15 @@ import styled from 'styled-components/native';
 
 const Root = styled.View``;
 
-const T = styled.Text``
+const T = styled.Text``;
 
 class NotificationsScreen extends Component {
-  state = {  }
+  constructor(props) {
+    super(props);
+    this.state = {
+      filterSearch: 'notApproved',
+    };
+  }
   render() {
     return (
       <Root>

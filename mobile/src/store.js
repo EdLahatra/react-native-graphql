@@ -1,23 +1,21 @@
-/* eslint-disable no-param-reassign */
-
 import { createStore, applyMiddleware } from 'redux';
 import { AsyncStorage } from 'react-native';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import ApolloClient, { createNetworkInterface } from 'apollo-client';
+import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
 import thunk from 'redux-thunk';
 import { createLogger } from 'redux-logger';
-import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
 
 import reducers from './reducers';
 
 const networkInterface = createNetworkInterface({
-  uri: 'http://localhost:3000/graphql',
+  uri: 'http://192.168.0.55:3000/graphql',
 });
 
-const wsClient = new SubscriptionClient('ws://localhost:3000/subscriptions', {
+const wsClient = new SubscriptionClient('ws://192.168.0.55:3000/subscriptions', {
   reconnect: true,
-  connectionParams: {}
-})
+  connectionParams: {},
+});
 
 networkInterface.use([{
   async applyMiddleware(req, next) {
@@ -34,16 +32,16 @@ networkInterface.use([{
     }
 
     return next();
-  }
-}])
+  },
+}]);
 
-const networkInterfaceWithSubs = addGraphQLSubscriptions(
+const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
   networkInterface,
-  wsClient
-)
+  wsClient,
+);
 
 export const client = new ApolloClient({
-  networkInterface: networkInterfaceWithSubs
+  networkInterface: networkInterfaceWithSubscriptions,
 });
 
 const middlewares = [client.middleware(), thunk, createLogger()];

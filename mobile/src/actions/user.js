@@ -1,16 +1,19 @@
 import { AsyncStorage } from 'react-native';
 
-export function login() {
+export const LOGIN = 'LOGIN';
+
+export function login(value) {
   return {
-    type: 'LOGIN'
-  }
+    type: LOGIN,
+    value,
+  };
 }
 
 export function getUserInfo(info) {
   return {
     type: 'GET_USER_INFO',
-    info
-  }
+    info,
+  };
 }
 
 export function logout() {
@@ -19,10 +22,10 @@ export function logout() {
       await AsyncStorage.removeItem('@twitteryoutubeclone');
 
       return dispatch({
-        type: 'LOGOUT'
-      })
+        type: 'LOGOUT',
+      });
     } catch (error) {
       throw error;
     }
-  }
+  };
 }

@@ -6,8 +6,8 @@ import { colors } from '../utils/constants';
 
 const Root = styled.View`
   flex: 1;
-  justifyContent: center;
-  alignItems: center;
+  justify-content: center;
+  align-items: center;
 `;
 
 export default function Loading({ color = colors.PRIMARY, size = 'large' } = {}) {
@@ -15,5 +15,5 @@ export default function Loading({ color = colors.PRIMARY, size = 'large' } = {})
     <Root>
       <ActivityIndicator size={size} color={color} />
     </Root>
-  )
+  );
 }

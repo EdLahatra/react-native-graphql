@@ -6,5 +6,5 @@ import user from './user';
 export default client => combineReducers({
   apollo: client.reducer(),
   nav,
-  user
+  user,
 });

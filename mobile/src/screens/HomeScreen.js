@@ -1,24 +1,37 @@
 import React, { Component } from 'react';
-import styled from 'styled-components/native';
 import { graphql, compose, withApollo } from 'react-apollo';
-import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
-
-import FeedCard from '../components/FeedCard/FeedCard';
+import { BackHandler, ActivityIndicator, FlatList } from 'react-native';
 
 import { getUserInfo } from '../actions/user';
 
+import TWEET_ADDED_SUBSCRIPTION from '../graphql/subscriptions/tweetAdded';
+
+import styled from '../utils/styled';
+
+import FeedCard from '../components/FeedCard/FeedCard';
 import GET_TWEETS_QUERY from '../graphql/queries/getTweets';
 import ME_QUERY from '../graphql/queries/me';
-import TWEET_ADDED_SUBSCRIPTION from '../graphql/subscriptions/tweetAdded';
-import TWEET_FAVORITED_SUBSCRIPTION from '../graphql/subscriptions/tweetFavorited';
 
 const Root = styled.View`
+  background-color: #f2f2f2;
   flex: 1;
-  paddingTop: 5;
+  padding-top: 10;
+  justify-content: center;
 `;
 
+const ScrollView = styled.ScrollView`
+
+`;
+
+// const T = styled.Text``;
+
 class HomeScreen extends Component {
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareButtonPress');
+  }
+
   componentWillMount() {
     this.props.data.subscribeToMore({
       document: TWEET_ADDED_SUBSCRIPTION,
@@ -28,7 +41,7 @@ class HomeScreen extends Component {
         }
 
         const newTweet = subscriptionData.data.tweetAdded;
-
+        // eslint-disable-next-line
         if (!prev.getTweets.find(t => t._id === newTweet._id)) {
           return {
             ...prev,
@@ -40,72 +53,62 @@ class HomeScreen extends Component {
       },
     });
 
-    this.props.data.subscribeToMore({
-      document: TWEET_FAVORITED_SUBSCRIPTION,
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData.data) {
-          return prev;
-        }
-
-        const newTweet = subscriptionData.data.tweetFavorited;
-        return {
-          ...prev,
-          getTweets: prev.getTweets.map(
-            tweet =>
-              tweet._id === newTweet._id
-                ? {
-                    ...tweet,
-                    favoriteCount: newTweet.favoriteCount,
-                  }
-                : tweet,
-          ),
-        };
-      },
-    });
+    BackHandler.addEventListener('hardwareButtonPress', () => this.backButtonPress());
   }
 
   componentDidMount() {
-    this._getUserInfo();
+    this.getUserInfo();
   }
 
-  _getUserInfo = async () => {
+  backButtonPress() {
+    // const { dispatch, navigation, nav, user } = this.props;
+    if (2 < 1) {
+      return false;
+    }
+    this.props.navigation.goBack(null);
+    return true;
+  }
+
+  async getUserInfo() {
     const { data: { me } } = await this.props.client.query({ query: ME_QUERY });
     this.props.getUserInfo(me);
-  };
+  }
 
-  _renderItem = ({ item }) => <FeedCard {...item} />;
+  renderItem = ({ item }) => <FeedCard {...item} />;
 
-  _renderPlaceholder = () => <FeedCard placeholder isLoaded={this.props.data.loading} />
+  // eslint-disable-next-line
+  onFavoritePress = () => console.log(this.state);
 
   render() {
     const { data } = this.props;
     if (data.loading) {
       return (
         <Root>
-          <FlatList
-            contentContainerStyle={{ alignSelf: 'stretch' }}
-            data={[1, 2, 3]}
-            renderItem={this._renderPlaceholder}
-            keyExtractor={item => item}
-          />
+          <ActivityIndicator size="large" />
         </Root>
       );
     }
+
     return (
       <Root>
-        <FlatList
-          contentContainerStyle={{ alignSelf: 'stretch' }}
-          data={data.getTweets}
-          keyExtractor={item => item._id}
-          renderItem={this._renderItem}
-        />
+        <ScrollView>
+          <FlatList
+            contentContainerStyle={{ alignSelf: 'stretch' }}
+            data={data.getTweets}
+            // eslint-disable-next-line
+            keyExtractor={item => item._id}
+            renderItem={this.renderItem}
+          />
+        </ScrollView>
       </Root>
     );
   }
 }
 
-export default withApollo(
-  compose(connect(undefined, { getUserInfo }), graphql(GET_TWEETS_QUERY))(
-    HomeScreen,
-  ),
-);
+export default withApollo(compose(
+  connect(state => ({
+    nav: state.nav,
+    user: state.user,
+  }), { getUserInfo }),
+  graphql(GET_TWEETS_QUERY),
+)(HomeScreen));

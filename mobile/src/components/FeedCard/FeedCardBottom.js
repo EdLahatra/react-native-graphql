@@ -1,58 +1,43 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import { SimpleLineIcons, Entypo } from '@expo/vector-icons';
+import PropTypes from 'prop-types';
 import Touchable from '@appandflow/touchable';
-
-import { colors } from '../../utils/constants';
-
-const ICON_SIZE = 20;
 
 const Root = styled.View`
   height: 40;
-  flexDirection: row;
+  flex-direction: row;
 `;
 
 const Button = styled(Touchable).attrs({
   feedback: 'opacity',
 })`
   flex: 1;
-  flexDirection: row;
-  alignItems: center;
-  justifyContent: space-around;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
   paddingHorizontal: 32px;
 `;
 
 const ButtonText = styled.Text`
-  fontSize: 14;
-  fontWeight: 500;
+  font-size: 14;
+  font-weight: 500;
   color: ${props => props.theme.LIGHT_GRAY};
 `;
 
-function FeedCardBottom({ favoriteCount, onFavoritePress, isFavorited }) {
+function FeedCardBottom({ favoriteCount, onFavoritePress }) {
   return (
     <Root>
       <Button>
-        <SimpleLineIcons
-          name="bubble"
-          size={ICON_SIZE}
-          color={colors.LIGHT_GRAY}
-        />
         <ButtonText>
           0
         </ButtonText>
       </Button>
       <Button>
-        <Entypo name="retweet" color={colors.LIGHT_GRAY} size={ICON_SIZE} />
         <ButtonText>
           0
         </ButtonText>
       </Button>
       <Button onPress={onFavoritePress}>
-        <Entypo
-          name="heart"
-          color={isFavorited ? 'red' : colors.LIGHT_GRAY}
-          size={ICON_SIZE}
-        />
         <ButtonText>
           {favoriteCount}
         </ButtonText>
@@ -60,5 +45,11 @@ function FeedCardBottom({ favoriteCount, onFavoritePress, isFavorited }) {
     </Root>
   );
 }
+
+FeedCardBottom.propTypes = {
+  favoriteCount: PropTypes.number.isRequired,
+  // eslint-disable-next-line
+  onFavoritePress: PropTypes.func,
+};
 
 export default FeedCardBottom;

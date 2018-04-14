@@ -6,10 +6,10 @@ const Button = styled(Touchable).attrs({
   feedback: 'opacity',
   hitSlop: { top: 20, bottom: 20, right: 20, left: 20 },
 })`
-  marginRight: ${props => props.side === 'right' ? 15 : 0};
-  marginLeft: ${props => props.side === 'left' ? 15 : 0};
-  justifyContent: center;
-  alignItems: center;
+  margin-right: ${props => props.side === 'right' ? 15 : 0};
+  margin-left: ${props => props.side === 'left' ? 15 : 0};
+  justify-content: center;
+  align-items: center;
 `;
 
 export default function ButtonHeader({ side, children, onPress, disabled }) {
@@ -17,5 +17,5 @@ export default function ButtonHeader({ side, children, onPress, disabled }) {
     <Button onPress={onPress} disabled={disabled} side={side}>
       {children}
     </Button>
-  )
+  );
 }

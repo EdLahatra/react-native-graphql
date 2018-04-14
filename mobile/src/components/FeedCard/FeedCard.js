@@ -1,75 +1,44 @@
 import React from 'react';
-import styled from 'styled-components/native';
-import { graphql, gql } from 'react-apollo';
-import Placeholder from 'rn-placeholder';
+import PropTypes from 'prop-types';
+import { gql } from 'react-apollo';
+
+import styled from '../../utils/styled';
 
 import FeedCardHeader from './FeedCardHeader';
 import FeedCardBottom from './FeedCardBottom';
-import FAVORITE_TWEET_MUTATION from '../../graphql/mutations/favoriteTweet';
 
 const Root = styled.View`
-  minHeight: 180;
-  backgroundColor: ${props => props.theme.WHITE};
+  min-height: 180;
+  background-color: red;
   width: 100%;
-  padding: 7px;
-  shadowColor: ${props => props.theme.SECONDARY};
-  shadowOffset: 0px 2px;
-  shadowRadius: 2;
-  shadowOpacity: 0.1;
-  marginVertical: 5;
+  background-color: ${props => props.theme.WHITE};
 `;
 
-const CardContentContainer = styled.View`
+const MetaContainer = styled.View`
   flex: 1;
-  padding: 10px 20px 10px 0px;
+  align-self: stretch;
+  background-color: blue;
 `;
 
-const CardContentText = styled.Text`
-  fontSize: 14;
-  textAlign: left;
-  fontWeight: 500;
+const MetaText = styled.Text`
+  font-size: 14;
+  text-align: left;
+  font-weight: 500;
   color: ${props => props.theme.SECONDARY};
 `;
 
-const Wrapper = styled.View`flex: 1`;
-
-function FeedCard({
-  text,
-  user,
-  createdAt,
-  favoriteCount,
-  favorite,
-  isFavorited,
-  placeholder,
-  isLoaded
-}) {
-  if (placeholder) {
-    return (
-      <Root>
-        <Placeholder.ImageContent
-          onReady={!isLoaded}
-          lineNumber={2}
-          animate="shine"
-          lastLineWidth="40%"
-        >
-          <Wrapper />
-        </Placeholder.ImageContent>
-      </Root>
-    )
-  }
-
+function FeedCard({ text, user, createdAt, favoriteCount, onFavoritePress }) {
   return (
     <Root>
       <FeedCardHeader {...user} createdAt={createdAt} />
-      <CardContentContainer>
-        <CardContentText>
+      <MetaContainer>
+        <MetaText>
           {text}
-        </CardContentText>
-      </CardContentContainer>
+        </MetaText>
+      </MetaContainer>
       <FeedCardBottom
-        isFavorited={isFavorited}
         favoriteCount={favoriteCount}
-        onFavoritePress={favorite}
+        onFavoritePress={onFavoritePress}
       />
     </Root>
   );
@@ -90,25 +59,19 @@ FeedCard.fragments = {
         firstName
       }
     }
-  `
-}
+  `,
+};
 
-export default graphql(FAVORITE_TWEET_MUTATION, {
-  props: ({ ownProps, mutate }) => ({
-    favorite: () =>
-      mutate({
-        variables: { _id: ownProps._id },
-        optimisticResponse: {
-          __typename: 'Mutation',
-          favoriteTweet: {
-            __typename: 'Tweet',
-            _id: ownProps._id,
-            favoriteCount: ownProps.isFavorited
-              ? ownProps.favoriteCount - 1
-              : ownProps.favoriteCount + 1,
-            isFavorited: !ownProps.isFavorited,
-          },
-        },
-      }),
-  }),
-})(FeedCard);
+FeedCard.propTypes = {
+  // eslint-disable-next-line
+  favoriteCount: PropTypes.any,
+  // eslint-disable-next-line
+  onFavoritePress: PropTypes.func,
+  text: PropTypes.string.isRequired,
+  // eslint-disable-next-line
+  user: PropTypes.object,
+  // eslint-disable-next-line
+  createdAt: PropTypes.any,
+};
+
+export default FeedCard;

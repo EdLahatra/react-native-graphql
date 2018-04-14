@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
+import PropTypes from 'prop-types';
 import distanceInWordsToNow from 'date-fns/distance_in_words_to_now';
 
 import { fakeAvatar } from '../../utils/constants';
@@ -9,14 +10,14 @@ const AVATAR_RADIUS = AVATAR_SIZE / 2;
 
 const Root = styled.View`
   height: 50;
-  flexDirection: row;
-  alignItems: center;
+  flex-direction: row;
+  align-items: center;
 `;
 
 const AvatarContainer = styled.View`
   flex: 0.2;
-  justifyContent: center;
-  alignSelf: stretch;
+  justify-content: center;
+  align-self: stretch;
 `;
 
 const Avatar = styled.Image`
@@ -27,33 +28,33 @@ const Avatar = styled.Image`
 
 const MetaContainer = styled.View`
   flex: 1;
-  alignSelf: stretch;
+  align-self: stretch;
 `;
 
 const MetaTopContainer = styled.View`
   flex: 1;
-  alignSelf: stretch;
-  flexDirection: row;
-  alignItems: center;
-  justifyContent: flex-start;
+  align-self: stretch;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
 `;
 
 const MetaBottomContainer = styled.View`
   flex: 0.8;
-  alignSelf: stretch;
-  alignItems: flex-start;
-  justifyContent: center;
+  align-self: stretch;
+  align-items: flex-start;
+  justify-content: center;
 `;
 
 const MetaFullName = styled.Text`
-  fontSize: 16;
-  fontWeight: bold;
+  font-size: 16;
+  font-weight: bold;
   color: ${props => props.theme.SECONDARY};
 `;
 
 const MetaText = styled.Text`
-  fontSize: 14;
-  fontWeight: 600;
+  font-size: 14;
+  font-weight: 600;
   color: ${props => props.theme.LIGHT_GRAY};
 `;
 
@@ -79,7 +80,17 @@ function FeedCardHeader({ username, firstName, lastName, avatar, createdAt }) {
         </MetaBottomContainer>
       </MetaContainer>
     </Root>
-  )
+  );
 }
+
+FeedCardHeader.propTypes = {
+  username: PropTypes.string.isRequired,
+  firstName: PropTypes.string.isRequired,
+  lastName: PropTypes.string.isRequired,
+  // eslint-disable-next-line
+  avatar: PropTypes.string,
+  // eslint-disable-next-line
+  createdAt: PropTypes.any,
+};
 
 export default FeedCardHeader;

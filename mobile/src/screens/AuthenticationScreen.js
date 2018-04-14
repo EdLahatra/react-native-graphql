@@ -6,28 +6,28 @@ import SignupForm from '../components/SignupForm';
 
 const Root = styled.View`
   flex: 1;
-  backgroundColor: ${props => props.theme.SECONDARY};
+  background-color: ${props => props.theme.SECONDARY};
   position: relative;
 `;
 
 const ButtonSignupText = styled.Text`
   color: ${props => props.theme.WHITE};
-  fontWeight: bold;
-  fontSize: 20;
+  font-weight: bold;
+  font-size: 20;
 `;
 
 const ButtonSignup = styled(Touchable).attrs({
-  feedback: 'opacity'
+  feedback: 'opacity',
 })`
   height: 75;
   width: 150;
-  backgroundColor: ${props => props.theme.PRIMARY};
-  justifyContent: center;
-  alignItems: center;
+  background-color: ${props => props.theme.PRIMARY};
+  justify-content: center;
+  align-items: center;
   position: absolute;
   top: 30%;
   right: 0;
-  borderTopLeftRadius: 20;
+  border-top-left-radius: 20;
   borderBottomLeftRadius: 20;
   shadowOpacity: 0.4;
   shadowRadius: 5;
@@ -42,54 +42,57 @@ const BottomTextContainer = styled.View`
   left: 0;
   right: 0;
   height: 200;
-  justifyContent: center;
-  alignItems: center;
+  justify-content: center;
+  align-items: center;
 `;
 
 const ButtonLogin = styled(Touchable).attrs({
   feedback: 'opacity',
-  hitSlop: { top: 20, bottom: 20, right: 20, left: 20 }
+  hitSlop: { top: 20, bottom: 20, right: 20, left: 20 },
 })`
-  justifyContent: center;
-  alignItems: center;
+  justify-content: center;
+  align-items: center;
 `;
 
 const ButtonLoginText = styled.Text`
   color: ${props => props.theme.WHITE};
-  fontWeight: 400;
-  fontSize: 16;
+  font-weight: 400;
+  font-size: 16;
 `;
 
 const initialState = {
   showSignup: false,
   showLogin: false,
-}
+};
 
 class AuthenticationScreen extends Component {
-  state = initialState;
+  constructor(props) {
+    super(props);
+    this.state = initialState;
+  }
 
-  _onShowSignupPress = () => this.setState({ showSignup: true });
+  onShowSignupPress = () => this.setState({ showSignup: true });
 
-  _onBackPress = () => this.setState({ ...initialState });
+  onBackPress = () => this.setState({ ...initialState });
 
   render() {
     if (this.state.showSignup) {
       return (
         <Root>
-          <SignupForm onBackPress={this._onBackPress} />
+          <SignupForm onBackPress={this.onBackPress} />
         </Root>
-      )
+      );
     }
     return (
       <Root>
-        <ButtonSignup onPress={this._onShowSignupPress}>
+        <ButtonSignup onPress={this.onShowSignupPress}>
           <ButtonSignupText>Get Started</ButtonSignupText>
         </ButtonSignup>
         <BottomTextContainer>
           <ButtonLogin>
-             <ButtonLoginText>
+            <ButtonLoginText>
                Already have an account?
-             </ButtonLoginText>
+            </ButtonLoginText>
           </ButtonLogin>
         </BottomTextContainer>
       </Root>
